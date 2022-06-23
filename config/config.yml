@@ -1,0 +1,10 @@
+app:
+  name: 'ntheanh201-journal'
+  version: '1.0.0'
+
+http:
+  port: '8080'
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'ntheanh201-journal'
