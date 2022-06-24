@@ -7,6 +7,10 @@ import (
 type PageNotionWebAPI struct {
 }
 
+func New() *PageNotionWebAPI {
+	return &PageNotionWebAPI{}
+}
+
 func (p *PageNotionWebAPI) GetPages() ([]entity.Page, error) {
 	// TODO: implement me
 	return []entity.Page{{}}, nil
@@ -15,8 +19,4 @@ func (p *PageNotionWebAPI) GetPages() ([]entity.Page, error) {
 func (p *PageNotionWebAPI) GetPage(id entity.ObjectID) (entity.Page, error) {
 	// TODO: implement me
 	return entity.Page{}, nil
-}
-
-func New() *PageNotionWebAPI {
-	return &PageNotionWebAPI{}
 }
