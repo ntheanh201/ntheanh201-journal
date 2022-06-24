@@ -13,6 +13,7 @@ type App struct {
 type Config struct {
 	App  `yaml:"app"`
 	Http `yaml:"http"`
+	Log  `yaml:"logger"`
 }
 
 type Http struct {
