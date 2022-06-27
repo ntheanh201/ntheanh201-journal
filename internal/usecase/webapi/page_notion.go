@@ -3,7 +3,6 @@ package webapi
 import (
 	"context"
 	"fmt"
-	"log"
 	"ntheanh201-journal/internal/entity"
 	"ntheanh201-journal/internal/response"
 	"os"
@@ -16,10 +15,7 @@ type PageNotionWebAPI struct {
 }
 
 func New() *PageNotionWebAPI {
-	notionAPIKey, err := os.LookupEnv("NOTION_API_KEY")
-	if err {
-		log.Fatalf("journal: environment variable not declared: PG_URL")
-	}
+	notionAPIKey := os.Getenv("NOTION_API_KEY")
 	return &PageNotionWebAPI{
 		notionClient: NewClient(notionAPIKey),
 	}
