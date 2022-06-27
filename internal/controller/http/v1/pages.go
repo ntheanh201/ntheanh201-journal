@@ -22,18 +22,14 @@ func NewPageRoutes(handler *gin.RouterGroup, p usecase.Page, l logger.Interface)
 	}
 }
 
-type pagesResponse struct {
-	Pages []entity.Page `json:"pages"`
-}
-
 func (r *pageRoutes) getPages(ctx *gin.Context) {
-	pages, err := r.p.GetPages(ctx.Request.Context())
+	res, err := r.p.GetPages(ctx.Request.Context())
 	if err != nil {
 		r.l.Error(err, "http - v1 - pages")
 		errorResponse(ctx, http.StatusInternalServerError, "fetching pages problems")
 		return
 	}
-	ctx.JSON(http.StatusOK, pagesResponse{pages})
+	ctx.JSON(http.StatusOK, res)
 }
 
 func (r *pageRoutes) getPage(ctx *gin.Context) {

@@ -4,22 +4,23 @@ import (
 	"context"
 	"fmt"
 	"ntheanh201-journal/internal/entity"
+	"ntheanh201-journal/internal/response"
 )
 
 type PageUseCase struct {
 	webAPI PageNotionWebAPI
 }
 
-func (uc *PageUseCase) GetPages(ctx context.Context) ([]entity.Page, error) {
-	pages, err := uc.webAPI.GetPages()
+func (uc *PageUseCase) GetPages(ctx context.Context) (response.DatabaseQueryResponse, error) {
+	pages, err := uc.webAPI.GetNotionPages(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("TranslationUseCase - History - s.repo.GetHistory: %w", err)
+		return response.DatabaseQueryResponse{}, fmt.Errorf("TranslationUseCase - History - s.repo.GetHistory: %w", err)
 	}
 	return pages, nil
 }
 
 func (uc *PageUseCase) GetPage(ctx context.Context, id entity.ObjectID) (entity.Page, error) {
-	page, err := uc.webAPI.GetPage(id)
+	page, err := uc.webAPI.GetNotionPage(ctx, id)
 	if err != nil {
 		return entity.Page{}, fmt.Errorf("TranslationUseCase - History - s.repo.GetHistory: %w", err)
 	}
