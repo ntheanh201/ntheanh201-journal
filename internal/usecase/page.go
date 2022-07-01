@@ -14,7 +14,7 @@ type PageUseCase struct {
 func (uc *PageUseCase) GetPages(ctx context.Context) (response.DatabaseQueryResponse, error) {
 	pages, err := uc.webAPI.GetNotionPages(ctx)
 	if err != nil {
-		return response.DatabaseQueryResponse{}, fmt.Errorf("TranslationUseCase - History - s.repo.GetHistory: %w", err)
+		return response.DatabaseQueryResponse{}, fmt.Errorf("PageUseCase - webAPI.GetPages: %w", err)
 	}
 	return pages, nil
 }
@@ -22,7 +22,7 @@ func (uc *PageUseCase) GetPages(ctx context.Context) (response.DatabaseQueryResp
 func (uc *PageUseCase) GetPage(ctx context.Context, id entity.ObjectID) (entity.Page, error) {
 	page, err := uc.webAPI.GetNotionPage(ctx, id)
 	if err != nil {
-		return entity.Page{}, fmt.Errorf("TranslationUseCase - History - s.repo.GetHistory: %w", err)
+		return entity.Page{}, fmt.Errorf("PageUseCase - webAPI.GetPages: %w", err)
 	}
 	return page, nil
 }

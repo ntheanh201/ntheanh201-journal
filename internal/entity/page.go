@@ -22,7 +22,7 @@ type Page struct {
 	CreatedBy      User       `json:"created_by,omitempty"`
 	LastEditedBy   User       `json:"last_edited_by,omitempty"`
 	Archived       bool       `json:"archived"`
-	//Properties     Properties `json:"properties"`
+	Properties     Properties `json:"properties"`
 	//Parent         Parent     `json:"parent"`
 	URL   string `json:"url"`
 	Icon  *Icon  `json:"icon,omitempty"`
