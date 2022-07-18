@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"ntheanh201-journal/internal/entity"
 	"ntheanh201-journal/internal/response"
 )
 
@@ -46,6 +47,7 @@ func NewClient(apiKey string, opts ...ClientOption) *Client {
 	return c
 }
 
+// WithHTTPClient overrides the default http.Client.
 func WithHTTPClient(client *http.Client) ClientOption {
 	return func(c *Client) {
 		c.httpClient = client
@@ -94,6 +96,29 @@ func (c *Client) queryDatabase(ctx context.Context, id string, query *response.Q
 	err = json.NewDecoder(res.Body).Decode(&result)
 	if err != nil {
 		return response.DatabaseQueryResponse{}, fmt.Errorf("notion: failed to parse HTTP response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) retrievePage(ctx context.Context, id entity.ObjectID) (result entity.Page, err error) {
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/pages/%v", id), &bytes.Buffer{})
+	if err != nil {
+		return entity.Page{}, fmt.Errorf("notion: invalid retrieve page request: %w", err)
+	}
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return entity.Page{}, fmt.Errorf("notion: failed to make HTTP request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return entity.Page{}, fmt.Errorf("notion: failed to retrieve page: %w", res)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&result)
+	if err != nil {
+		return entity.Page{}, fmt.Errorf("notion: failed to parse HTTP response: %w", err)
 	}
 
 	return result, nil

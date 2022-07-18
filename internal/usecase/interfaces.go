@@ -15,5 +15,6 @@ type (
 	PageNotionWebAPI interface {
 		GetNotionPages(context.Context) (response.DatabaseQueryResponse, error)
 		GetNotionPage(ctx context.Context, id entity.ObjectID) (entity.Page, error)
+		GetNotionBlockChildren(ctx context.Context, id entity.ObjectID) (response.BlockChildrenResponse, error)
 	}
 )
