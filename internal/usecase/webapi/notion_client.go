@@ -123,3 +123,26 @@ func (c *Client) retrievePage(ctx context.Context, id entity.ObjectID) (result e
 
 	return result, nil
 }
+
+func (c *Client) retrieveBlockChildren(ctx context.Context, id entity.ObjectID) (result entity.Page, err error) {
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/blocks/%v/children", id), &bytes.Buffer{})
+	if err != nil {
+		return entity.Page{}, fmt.Errorf("notion: invalid retrieve block children request: %w", err)
+	}
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return entity.Page{}, fmt.Errorf("notion: failed to make HTTP request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return entity.Page{}, fmt.Errorf("notion: failed to retrieve block children: %w", res)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&result)
+	if err != nil {
+		return entity.Page{}, fmt.Errorf("notion: failed to parse HTTP response: %w", err)
+	}
+
+	return result, nil
+}
