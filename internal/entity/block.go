@@ -13,6 +13,10 @@ type Heading struct {
 	Color *Color      `json:"color,omitempty"`
 }
 
+type Embed struct {
+	URL string `json:"url"`
+}
+
 type TextBlock struct {
 	Title *[]RichText `json:"rich_text,omitempty"`
 	Color *Color      `json:"color,omitempty"`
@@ -30,4 +34,9 @@ type Block struct {
 	Heading3        *Heading         `json:"heading_3,omitempty"`
 	TableOfContents *TableOfContents `json:"table_of_contents,omitempty"`
 	Quote           *TextBlock       `json:"quote,omitempty"`
+	Image           *Image           `json:"image,omitempty"`
+	Embed           *Embed           `json:"embed,omitempty"`
+	File            *FileBlock       `json:"file,omitempty"`
+	//	TODO: handle table Notion: if has_children = true -> retrieve block children 1 more time -> get table content
+
 }
