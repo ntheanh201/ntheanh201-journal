@@ -15,7 +15,7 @@ import (
 const (
 	apiUrl        = "https://api.notion.com"
 	apiVersion    = "v1"
-	notionVersion = "2022-06-28"
+	notionVersion = "2022-02-22"
 )
 
 type Client struct {
