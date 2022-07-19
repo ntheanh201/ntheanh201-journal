@@ -30,6 +30,17 @@ func (p *PageNotionWebAPI) GetNotionPages(ctx context.Context) (response.Databas
 }
 
 func (p *PageNotionWebAPI) GetNotionPage(ctx context.Context, id entity.ObjectID) (entity.Page, error) {
-	// TODO: implement me
-	return entity.Page{}, nil
+	res, err := p.notionClient.retrievePage(ctx, id)
+	if err != nil {
+		_ = fmt.Errorf("journal: failed to retrieve Notion page: %s - %w", id, err)
+	}
+	return res, nil
+}
+
+func (p *PageNotionWebAPI) GetNotionBlockChildren(ctx context.Context, id entity.ObjectID, pageSize int) (response.BlockChildrenResponse, error) {
+	res, err := p.notionClient.retrieveBlockChildren(ctx, id, pageSize)
+	if err != nil {
+		_ = fmt.Errorf("journal: failed to retrieve Notion block children: %s - %w", id, err)
+	}
+	return res, nil
 }

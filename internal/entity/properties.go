@@ -32,4 +32,6 @@ type Property struct {
 	RichText    *[]RichText          `json:"rich_text,omitempty"`
 	Select      *SelectOptions       `json:"select,omitempty"`
 	MultiSelect *[]SelectOptions     `json:"multi_select,omitempty"`
+	Formula     *interface{}         `json:"formula,omitempty"`
+	Relation    *interface{}         `json:"relation,omitempty"`
 }
