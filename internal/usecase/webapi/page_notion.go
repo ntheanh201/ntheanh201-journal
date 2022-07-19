@@ -37,7 +37,10 @@ func (p *PageNotionWebAPI) GetNotionPage(ctx context.Context, id entity.ObjectID
 	return res, nil
 }
 
-func (p *PageNotionWebAPI) GetNotionBlockChildren(ctx context.Context, id entity.ObjectID) (response.BlockChildrenResponse, error) {
-	// TODO: implement me
-	return response.BlockChildrenResponse{}, nil
+func (p *PageNotionWebAPI) GetNotionBlockChildren(ctx context.Context, id entity.ObjectID, pageSize int) (response.BlockChildrenResponse, error) {
+	res, err := p.notionClient.retrieveBlockChildren(ctx, id, pageSize)
+	if err != nil {
+		_ = fmt.Errorf("journal: failed to retrieve Notion page: %s - %w", id, err)
+	}
+	return res, nil
 }

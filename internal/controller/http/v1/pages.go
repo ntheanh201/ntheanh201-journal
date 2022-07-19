@@ -19,6 +19,7 @@ func NewPageRoutes(handler *gin.RouterGroup, p usecase.Page, l logger.Interface)
 	{
 		h.GET("", r.getPages)
 		h.GET("/:pageId", r.getPage)
+		h.GET("/:pageId/children", r.getBlockChildren)
 	}
 }
 
@@ -40,4 +41,14 @@ func (r *pageRoutes) getPage(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, page)
+}
+
+func (r *pageRoutes) getBlockChildren(ctx *gin.Context) {
+	res, err := r.p.GetBlockChildren(ctx.Request.Context(), entity.ObjectID(ctx.Param("pageId")))
+	if err != nil {
+		r.l.Error(err, "http - v1 - block children")
+		errorResponse(ctx, http.StatusInternalServerError, "fetching block children problems")
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
 }

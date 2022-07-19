@@ -27,6 +27,15 @@ func (uc *PageUseCase) GetPage(ctx context.Context, id entity.ObjectID) (entity.
 	return page, nil
 }
 
+func (uc *PageUseCase) GetBlockChildren(ctx context.Context, id entity.ObjectID) (response.BlockChildrenResponse, error) {
+	pageSize := 100
+	res, err := uc.webAPI.GetNotionBlockChildren(ctx, id, pageSize)
+	if err != nil {
+		return response.BlockChildrenResponse{}, fmt.Errorf("PageUseCase - webAPI.GetBlockChildren: %w", err)
+	}
+	return res, nil
+}
+
 func New(w PageNotionWebAPI) *PageUseCase {
 	return &PageUseCase{
 		w,

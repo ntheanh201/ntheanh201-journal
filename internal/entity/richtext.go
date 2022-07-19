@@ -39,5 +39,5 @@ type RichText struct {
 	Text        Text         `json:"text"`
 	Annotations *Annotations `json:"annotations,omitempty"`
 	PlainText   string       `json:"plain_text,omitempty"`
-	Href        string       `json:"href,omitempty"`
+	Href        *string      `json:"href,omitempty"`
 }

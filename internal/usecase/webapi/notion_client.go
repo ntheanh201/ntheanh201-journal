@@ -15,7 +15,7 @@ import (
 const (
 	apiUrl        = "https://api.notion.com"
 	apiVersion    = "v1"
-	notionVersion = "2022-02-22"
+	notionVersion = "2022-06-28"
 )
 
 type Client struct {
@@ -124,24 +124,24 @@ func (c *Client) retrievePage(ctx context.Context, id entity.ObjectID) (result e
 	return result, nil
 }
 
-func (c *Client) retrieveBlockChildren(ctx context.Context, id entity.ObjectID) (result entity.Page, err error) {
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/blocks/%v/children", id), &bytes.Buffer{})
+func (c *Client) retrieveBlockChildren(ctx context.Context, id entity.ObjectID, pageSize int) (result response.BlockChildrenResponse, err error) {
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/blocks/%v/children?page_size=%d", id, pageSize), &bytes.Buffer{})
 	if err != nil {
-		return entity.Page{}, fmt.Errorf("notion: invalid retrieve block children request: %w", err)
+		return response.BlockChildrenResponse{}, fmt.Errorf("notion: invalid retrieve block children request: %w", err)
 	}
 	res, err := c.httpClient.Do(req)
 	if err != nil {
-		return entity.Page{}, fmt.Errorf("notion: failed to make HTTP request: %w", err)
+		return response.BlockChildrenResponse{}, fmt.Errorf("notion: failed to make HTTP request: %w", err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return entity.Page{}, fmt.Errorf("notion: failed to retrieve block children: %w", res)
+		return response.BlockChildrenResponse{}, fmt.Errorf("notion: failed to retrieve block children: %w", res)
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&result)
 	if err != nil {
-		return entity.Page{}, fmt.Errorf("notion: failed to parse HTTP response: %w", err)
+		return response.BlockChildrenResponse{}, fmt.Errorf("notion: failed to parse HTTP response: %w", err)
 	}
 
 	return result, nil
