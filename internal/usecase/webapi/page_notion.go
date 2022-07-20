@@ -55,6 +55,7 @@ func (p *PageNotionWebAPI) QueryNotionPageBySlug(ctx context.Context, slug strin
 	res, err := p.notionClient.queryDatabase(ctx, databaseId, &query)
 	if err != nil {
 		_ = fmt.Errorf("journal: failed to retrieve Notion page by slug: %s - %w", slug, err)
+		return response.DatabaseQueryResponse{}, err
 	}
 	return res, nil
 }

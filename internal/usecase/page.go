@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"ntheanh201-journal/internal/entity"
 	"ntheanh201-journal/internal/response"
@@ -39,8 +40,9 @@ func (uc *PageUseCase) GetBlockChildren(ctx context.Context, id entity.ObjectID)
 func (uc *PageUseCase) GetBlockChildrenBySlug(ctx context.Context, slug string) (response.BlockChildrenResponse, error) {
 	pages, err := uc.webAPI.QueryNotionPageBySlug(ctx, slug)
 
-	if err != nil {
-		return response.BlockChildrenResponse{}, fmt.Errorf("PageUseCase - webAPI.QueryDatabaseFilter: %w", err)
+	if err != nil || len(pages.Results) == 0 {
+		_ = fmt.Errorf("PageUseCase - webAPI.QueryDatabaseFilter: %w", err)
+		return response.BlockChildrenResponse{}, errors.New("cannot query page")
 	}
 
 	page := pages.Results[0]
