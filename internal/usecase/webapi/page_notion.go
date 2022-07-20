@@ -11,13 +11,15 @@ import (
 const databaseId = "68f077a6dfb346358f219875e80ea72c"
 
 type PageNotionWebAPI struct {
-	notionClient *Client
+	notionClient   *Client
+	notionClientV3 *Client
 }
 
 func New() *PageNotionWebAPI {
 	notionAPIKey := os.Getenv("NOTION_API_KEY")
 	return &PageNotionWebAPI{
-		notionClient: NewClient(notionAPIKey),
+		notionClient:   NewClient(notionAPIKey),
+		notionClientV3: NewClientV3(),
 	}
 }
 
@@ -56,6 +58,15 @@ func (p *PageNotionWebAPI) QueryNotionPageBySlug(ctx context.Context, slug strin
 	if err != nil {
 		_ = fmt.Errorf("journal: failed to retrieve Notion page by slug: %s - %w", slug, err)
 		return response.DatabaseQueryResponse{}, err
+	}
+	return res, nil
+}
+
+func (p *PageNotionWebAPI) LoadPageChunkV3(ctx context.Context, id entity.ObjectID) (response.LoadPageChunkResponse, error) {
+	res, err := p.notionClientV3.loadPageChunk(ctx, id)
+	if err != nil {
+		_ = fmt.Errorf("journal: failed to load page chunk Notion: %s - %w", id, err)
+		return response.LoadPageChunkResponse{}, err
 	}
 	return res, nil
 }
