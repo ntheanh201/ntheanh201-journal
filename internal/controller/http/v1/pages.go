@@ -58,7 +58,7 @@ func (r *pageRoutes) getBlockChildrenBySlug(ctx *gin.Context) {
 	res, err := r.p.GetBlockChildrenBySlug(ctx.Request.Context(), ctx.Param("slug"))
 	if err != nil {
 		r.l.Error(err, "http - v1 - block children by slug")
-		errorResponse(ctx, http.StatusInternalServerError, "fetching block children by slug problems")
+		errorResponse(ctx, http.StatusNotFound, "fetching block children by slug problems")
 		return
 	}
 	ctx.JSON(http.StatusOK, res)
