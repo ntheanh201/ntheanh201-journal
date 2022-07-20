@@ -22,7 +22,7 @@ func New() *PageNotionWebAPI {
 }
 
 func (p *PageNotionWebAPI) GetNotionPages(ctx context.Context) (response.DatabaseQueryResponse, error) {
-	res, err := p.notionClient.queryDatabase(ctx, databaseId, &response.QueryDatabase{})
+	res, err := p.notionClient.queryDatabase(ctx, databaseId, nil)
 	if err != nil {
 		_ = fmt.Errorf("journal: failed to get Notion database: %w", err)
 	}
@@ -41,6 +41,20 @@ func (p *PageNotionWebAPI) GetNotionBlockChildren(ctx context.Context, id entity
 	res, err := p.notionClient.retrieveBlockChildren(ctx, id, pageSize)
 	if err != nil {
 		_ = fmt.Errorf("journal: failed to retrieve Notion block children: %s - %w", id, err)
+	}
+	return res, nil
+}
+
+func (p *PageNotionWebAPI) QueryNotionPageBySlug(ctx context.Context, slug string) (response.DatabaseQueryResponse, error) {
+	query := response.QueryDatabase{
+		Filter: &response.QueryDatabaseFilter{
+			Property: "slug",
+			Value:    response.FilterContains{Contains: slug},
+		},
+	}
+	res, err := p.notionClient.queryDatabase(ctx, databaseId, &query)
+	if err != nil {
+		_ = fmt.Errorf("journal: failed to retrieve Notion page by slug: %s - %w", slug, err)
 	}
 	return res, nil
 }

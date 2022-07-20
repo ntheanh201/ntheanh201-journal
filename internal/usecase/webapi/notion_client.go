@@ -15,7 +15,7 @@ import (
 const (
 	apiUrl        = "https://api.notion.com"
 	apiVersion    = "v1"
-	notionVersion = "2022-06-28"
+	notionVersion = "2022-02-22"
 )
 
 type Client struct {
@@ -77,6 +77,13 @@ func (c *Client) newRequest(ctx context.Context, method, url string, body io.Rea
 
 func (c *Client) queryDatabase(ctx context.Context, id string, query *response.QueryDatabase) (result response.DatabaseQueryResponse, err error) {
 	body := &bytes.Buffer{}
+
+	if query != nil {
+		err = json.NewEncoder(body).Encode(query)
+		if err != nil {
+			return response.DatabaseQueryResponse{}, fmt.Errorf("notion: failed to encode filter to JSON: %w", err)
+		}
+	}
 
 	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/databases/%v/query", id), body)
 	if err != nil {
