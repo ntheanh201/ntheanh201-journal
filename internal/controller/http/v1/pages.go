@@ -21,6 +21,7 @@ func NewPageRoutes(handler *gin.RouterGroup, p usecase.Page, l logger.Interface)
 		h.GET("/:pageId", r.getPage)
 		h.GET("/:pageId/children", r.getBlockChildren)
 		h.GET("/blocks/:slug", r.getBlockChildrenBySlug)
+		h.GET("/record/:slug", r.getPageChunkV3)
 	}
 }
 
@@ -55,10 +56,20 @@ func (r *pageRoutes) getBlockChildren(ctx *gin.Context) {
 }
 
 func (r *pageRoutes) getBlockChildrenBySlug(ctx *gin.Context) {
-	res, err := r.p.GetBlockChildrenBySlug(ctx.Request.Context(), ctx.Param("slug"))
+	res, err := r.p.GetBlockChildren(ctx.Request.Context(), entity.ObjectID(ctx.Param("slug")))
 	if err != nil {
 		r.l.Error(err, "http - v1 - block children by slug")
 		errorResponse(ctx, http.StatusNotFound, "fetching block children by slug problems")
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (r *pageRoutes) getPageChunkV3(ctx *gin.Context) {
+	res, err := r.p.LoadPageChunkV3(ctx.Request.Context(), ctx.Param("slug"))
+	if err != nil {
+		r.l.Error(err, "http - v1 - load page chunk")
+		errorResponse(ctx, http.StatusNotFound, "fetching page chunk problems")
 		return
 	}
 	ctx.JSON(http.StatusOK, res)
