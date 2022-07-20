@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	apiUrlV3     = "https://www.notion.so/api"
+	apiUrlV3     = "https://www.notion.so"
+	apiTag       = "api"
 	apiVersionV3 = "v3"
 )
 
@@ -37,7 +38,7 @@ func NewClientV3(opts ...ClientOption) *Client {
 }
 
 func (c *Client) newRequestV3(ctx context.Context, method, url string, body io.Reader) (*http.Request, error) {
-	u, err := c.baseUrl.Parse(fmt.Sprintf("%s%s", c.apiVersion, url))
+	u, err := c.baseUrl.Parse(fmt.Sprintf("%s/%s%s", apiTag, c.apiVersion, url))
 	if err != nil {
 		return nil, err
 	}
