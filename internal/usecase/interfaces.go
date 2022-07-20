@@ -11,11 +11,13 @@ type (
 		GetPages(context.Context) (response.DatabaseQueryResponse, error)
 		GetPage(context.Context, entity.ObjectID) (entity.Page, error)
 		GetBlockChildren(ctx context.Context, id entity.ObjectID) (response.BlockChildrenResponse, error)
+		GetBlockChildrenBySlug(ctx context.Context, slug string) (response.BlockChildrenResponse, error)
 	}
 
 	PageNotionWebAPI interface {
 		GetNotionPages(context.Context) (response.DatabaseQueryResponse, error)
 		GetNotionPage(ctx context.Context, id entity.ObjectID) (entity.Page, error)
 		GetNotionBlockChildren(ctx context.Context, id entity.ObjectID, pageSize int) (response.BlockChildrenResponse, error)
+		QueryNotionPageBySlug(ctx context.Context, slug string) (response.DatabaseQueryResponse, error)
 	}
 )

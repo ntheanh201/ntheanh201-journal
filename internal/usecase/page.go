@@ -36,6 +36,24 @@ func (uc *PageUseCase) GetBlockChildren(ctx context.Context, id entity.ObjectID)
 	return res, nil
 }
 
+func (uc *PageUseCase) GetBlockChildrenBySlug(ctx context.Context, slug string) (response.BlockChildrenResponse, error) {
+	pages, err := uc.webAPI.QueryNotionPageBySlug(ctx, slug)
+
+	if err != nil {
+		return response.BlockChildrenResponse{}, fmt.Errorf("PageUseCase - webAPI.QueryDatabaseFilter: %w", err)
+	}
+
+	page := pages.Results[0]
+	id := page.ID
+
+	pageSize := 100
+	res, err := uc.webAPI.GetNotionBlockChildren(ctx, id, pageSize)
+	if err != nil {
+		return response.BlockChildrenResponse{}, fmt.Errorf("PageUseCase - webAPI.GetBlockChildren: %w", err)
+	}
+	return res, nil
+}
+
 func New(w PageNotionWebAPI) *PageUseCase {
 	return &PageUseCase{
 		w,

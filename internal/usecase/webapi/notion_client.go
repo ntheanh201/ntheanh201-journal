@@ -78,6 +78,13 @@ func (c *Client) newRequest(ctx context.Context, method, url string, body io.Rea
 func (c *Client) queryDatabase(ctx context.Context, id string, query *response.QueryDatabase) (result response.DatabaseQueryResponse, err error) {
 	body := &bytes.Buffer{}
 
+	if query != nil {
+		err = json.NewEncoder(body).Encode(query)
+		if err != nil {
+			return response.DatabaseQueryResponse{}, fmt.Errorf("notion: failed to encode filter to JSON: %w", err)
+		}
+	}
+
 	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/databases/%v/query", id), body)
 	if err != nil {
 		return response.DatabaseQueryResponse{}, fmt.Errorf("notion: invalid request: %w", err)
