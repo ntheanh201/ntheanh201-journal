@@ -22,7 +22,7 @@ func NewPageRoutes(handler *gin.RouterGroup, p usecase.Page, l logger.Interface)
 		h.GET("/:pageId", r.getPage)
 		h.GET("/:pageId/children", r.getBlockChildren)
 		h.GET("/blocks/:slug", r.getBlockChildrenBySlug)
-		h.GET("/record/:slug", r.getPageChunkV3)
+		h.POST("/record/:slug", r.getPageChunkV3)
 		h.POST("/getSignedFileUrls", r.getSignedFileUrls)
 		h.POST("/queryCollection", r.queryCollection)
 		h.POST("/syncRecordValues", r.syncRecordValues)
@@ -70,7 +70,13 @@ func (r *pageRoutes) getBlockChildrenBySlug(ctx *gin.Context) {
 }
 
 func (r *pageRoutes) getPageChunkV3(ctx *gin.Context) {
-	res, err := r.p.LoadPageChunkV3(ctx.Request.Context(), ctx.Param("slug"))
+	req := request.LoadPageChunkRequest{}
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	res, err := r.p.LoadPageChunkV3(ctx.Request.Context(), ctx.Param("slug"), req)
 	if err != nil {
 		r.l.Error(err, "http - v1 - load page chunk")
 		errorResponse(ctx, http.StatusNotFound, "fetching page chunk problems")

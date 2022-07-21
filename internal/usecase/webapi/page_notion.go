@@ -63,10 +63,10 @@ func (p *PageNotionWebAPI) QueryNotionPageBySlug(ctx context.Context, slug strin
 	return res, nil
 }
 
-func (p *PageNotionWebAPI) LoadPageChunkV3(ctx context.Context, id entity.ObjectID) (response.LoadPageChunkResponse, error) {
-	res, err := p.notionClientV3.loadPageChunk(ctx, id)
+func (p *PageNotionWebAPI) LoadPageChunkV3(ctx context.Context, chunkRequest request.LoadPageChunkRequest) (response.LoadPageChunkResponse, error) {
+	res, err := p.notionClientV3.loadPageChunk(ctx, chunkRequest)
 	if err != nil {
-		_ = fmt.Errorf("journal: failed to load page chunk Notion: %s - %w", id, err)
+		_ = fmt.Errorf("journal: failed to load page chunk Notion: %s - %w", err)
 		return response.LoadPageChunkResponse{}, err
 	}
 	return res, nil

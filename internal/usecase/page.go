@@ -7,6 +7,7 @@ import (
 	"ntheanh201-journal/internal/entity"
 	"ntheanh201-journal/internal/request"
 	"ntheanh201-journal/internal/response"
+	"ntheanh201-journal/internal/utils"
 )
 
 type PageUseCase struct {
@@ -57,7 +58,7 @@ func (uc *PageUseCase) GetBlockChildrenBySlug(ctx context.Context, slug string) 
 	return res, nil
 }
 
-func (uc *PageUseCase) LoadPageChunkV3(ctx context.Context, slug string) (response.LoadPageChunkResponse, error) {
+func (uc *PageUseCase) LoadPageChunkV3(ctx context.Context, slug string, chunkRequest request.LoadPageChunkRequest) (response.LoadPageChunkResponse, error) {
 	pages, err := uc.webAPI.QueryNotionPageBySlug(ctx, slug)
 
 	if err != nil || len(pages.Results) == 0 {
@@ -68,7 +69,8 @@ func (uc *PageUseCase) LoadPageChunkV3(ctx context.Context, slug string) (respon
 	page := pages.Results[0]
 	id := page.ID
 
-	res, err := uc.webAPI.LoadPageChunkV3(ctx, id)
+	chunkRequest.PageId = utils.ParsePageId(id.String())
+	res, err := uc.webAPI.LoadPageChunkV3(ctx, chunkRequest)
 	if err != nil {
 		return response.LoadPageChunkResponse{}, fmt.Errorf("PageUseCase - webAPI.LoadPageChunkV3: %w", err)
 	}
