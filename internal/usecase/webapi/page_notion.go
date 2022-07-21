@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"ntheanh201-journal/internal/entity"
+	"ntheanh201-journal/internal/request"
 	"ntheanh201-journal/internal/response"
 	"os"
 )
@@ -67,6 +68,15 @@ func (p *PageNotionWebAPI) LoadPageChunkV3(ctx context.Context, id entity.Object
 	if err != nil {
 		_ = fmt.Errorf("journal: failed to load page chunk Notion: %s - %w", id, err)
 		return response.LoadPageChunkResponse{}, err
+	}
+	return res, nil
+}
+
+func (p *PageNotionWebAPI) GetSignedFileUrls(ctx context.Context, req request.GetSignedFileUrlsRequest) (response.GetSignedUrlsResponse, error) {
+	res, err := p.notionClientV3.getSignedFileUrls(ctx, req)
+	if err != nil {
+		_ = fmt.Errorf("journal: failed to get signed file urls Notion: %w", err)
+		return response.GetSignedUrlsResponse{}, err
 	}
 	return res, nil
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"ntheanh201-journal/internal/entity"
+	"ntheanh201-journal/internal/request"
 	"ntheanh201-journal/internal/response"
 )
 
@@ -70,6 +71,14 @@ func (uc *PageUseCase) LoadPageChunkV3(ctx context.Context, slug string) (respon
 	res, err := uc.webAPI.LoadPageChunkV3(ctx, id)
 	if err != nil {
 		return response.LoadPageChunkResponse{}, fmt.Errorf("PageUseCase - webAPI.LoadPageChunkV3: %w", err)
+	}
+	return res, nil
+}
+
+func (uc *PageUseCase) GetSignedFileUrls(ctx context.Context, request request.GetSignedFileUrlsRequest) (response.GetSignedUrlsResponse, error) {
+	res, err := uc.webAPI.GetSignedFileUrls(ctx, request)
+	if err != nil {
+		return response.GetSignedUrlsResponse{}, fmt.Errorf("PageUseCase - webAPI.GetBlockChildren: %w", err)
 	}
 	return res, nil
 }

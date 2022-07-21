@@ -91,3 +91,65 @@ func (c *Client) loadPageChunk(ctx context.Context, id entity.ObjectID) (result 
 
 	return result, nil
 }
+
+//func (c *Client) queryCollection(ctx context.Context, req *request.QueryCollectionRequest, query *request.Query) (result response.QueryCollectionResponse, err error) {
+//	body := &bytes.Buffer{}
+//
+//	query := &request
+//
+//	err = json.NewEncoder(body).Encode(query)
+//	if err != nil {
+//		return response.QueryCollectionResponse{}, fmt.Errorf("notion: failed to encode filter to JSON: %w", err)
+//	}
+//
+//	req, err := c.newRequestV3(ctx, http.MethodPost, "/loadPageChunk", body)
+//	if err != nil {
+//		return response.QueryCollectionResponse{}, fmt.Errorf("notion: invalid load page chunk request: %w", err)
+//	}
+//	res, err := c.httpClient.Do(req)
+//	if err != nil {
+//		return response.QueryCollectionResponse{}, fmt.Errorf("notion: failed to make HTTP request: %w", err)
+//	}
+//	defer res.Body.Close()
+//
+//	if res.StatusCode != http.StatusOK {
+//		return response.QueryCollectionResponse{}, fmt.Errorf("notion: failed to load page chunk: %w", res)
+//	}
+//
+//	err = json.NewDecoder(res.Body).Decode(&result)
+//	if err != nil {
+//		return response.QueryCollectionResponse{}, fmt.Errorf("notion: failed to parse HTTP response: %w", err)
+//	}
+//
+//	return result, nil
+//}
+
+func (c *Client) getSignedFileUrls(ctx context.Context, input request.GetSignedFileUrlsRequest) (result response.GetSignedUrlsResponse, err error) {
+	body := &bytes.Buffer{}
+
+	err = json.NewEncoder(body).Encode(input)
+	if err != nil {
+		return response.GetSignedUrlsResponse{}, fmt.Errorf("notion: failed to encode filter to JSON: %w", err)
+	}
+
+	req, err := c.newRequestV3(ctx, http.MethodPost, "/getSignedFileUrls", body)
+	if err != nil {
+		return response.GetSignedUrlsResponse{}, fmt.Errorf("notion: invalid load page chunk request: %w", err)
+	}
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return response.GetSignedUrlsResponse{}, fmt.Errorf("notion: failed to make HTTP request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return response.GetSignedUrlsResponse{}, fmt.Errorf("notion: failed to load page chunk: %w", res)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&result)
+	if err != nil {
+		return response.GetSignedUrlsResponse{}, fmt.Errorf("notion: failed to parse HTTP response: %w", err)
+	}
+
+	return result, nil
+}

@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"ntheanh201-journal/internal/entity"
+	"ntheanh201-journal/internal/request"
 	"ntheanh201-journal/internal/usecase"
 )
 
@@ -22,6 +23,9 @@ func NewPageRoutes(handler *gin.RouterGroup, p usecase.Page, l logger.Interface)
 		h.GET("/:pageId/children", r.getBlockChildren)
 		h.GET("/blocks/:slug", r.getBlockChildrenBySlug)
 		h.GET("/record/:slug", r.getPageChunkV3)
+		h.POST("/getSignedFileUrls", r.getSignedFileUrls)
+		h.POST("/queryCollection", r.queryCollection)
+		h.POST("/syncRecordValues", r.syncRecordValues)
 	}
 }
 
@@ -73,4 +77,29 @@ func (r *pageRoutes) getPageChunkV3(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (r *pageRoutes) getSignedFileUrls(ctx *gin.Context) {
+	req := request.GetSignedFileUrlsRequest{}
+
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	res, err := r.p.GetSignedFileUrls(ctx.Request.Context(), req)
+	if err != nil {
+		r.l.Error(err, "http - v1 - get signed file urls")
+		errorResponse(ctx, http.StatusBadRequest, "fetching signed file urls problems")
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (r *pageRoutes) syncRecordValues(ctx *gin.Context) {
+
+}
+
+func (r *pageRoutes) queryCollection(ctx *gin.Context) {
+
 }
